@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.http import HttpResponseForbidden, HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-#from django.views.genetic import View
-from django.views.generic import CreateView
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 
 from .forms import userForms
 
@@ -15,24 +13,22 @@ def homepage(request):
 '''
 This is view for the user registration
 '''
-class RegisterUserView(CreateView):
-    form_class = userForms
-    template_name = 'signup.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            return HttpResponseForbidden()
-
-        return super(RegisterUserView, self).dispatch(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password'])
-        user.save()
-        return HttpResponse('User Registred')
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
 '''
 def signUp(request):
     
-    return render(request, 'signup.html')
+    return render(request, 'register.html')
 '''

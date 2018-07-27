@@ -11,7 +11,7 @@ class userForms(forms.ModelForm):
     lastName = forms.CharField(label="Last Name")
     class meta:
         model = User
-        fields = ['firstName', 'lastName', 'password', 'email']
+        fields = ['username', 'email']
 
     #Validation of passwords
     def clean_password(self):
