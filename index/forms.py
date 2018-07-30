@@ -1,22 +1,21 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from wtforms import ValidationError
 
-
-class userForms(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput, label='Password')
-    password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm password')
-    email = forms.EmailField(label='Email')
+class userForms(UserCreationForm):
+    email = forms.EmailField(label='Email', max_length=254, help_text='Required. Inform a valid email address.')
     firstName = forms.CharField(label="First Name")
     lastName = forms.CharField(label="Last Name")
     class meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'firstName', 'lastname', 'password1', 'password2']
 
     #Validation of passwords
+    '''
     def clean_password(self):
         cd = self.cleaned_data
         if cd['password2'] != cd['password']:
             raise ValidationError("Password don't match")
 
         return cd['password']
+    '''

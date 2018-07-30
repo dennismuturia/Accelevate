@@ -16,11 +16,15 @@ Including another URLconf
 from django.conf.urls import url,include
 from django.contrib import admin
 from index import views
+from Accelevate.core import views as core_views
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^register/$', views.signup, name='signup'),
     url(r'^$', views.homepage, name='home'),
+    url(r'^account_activation_sent/$', core_views.account_activation_sent, name='account_activation_sent'),
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        core_views.activate, name='activate'),
     #(r'^signup$', view=RegisterUserView.as_view(), name='register'),
 ]
